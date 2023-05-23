@@ -9,25 +9,35 @@ NO_PARENT = -1
 def dijkstra(adjacency_matrix: List[List[int]], start_vertex: int):
     n_vertices = len(adjacency_matrix[0])
 
+    # Inicialização das distâncias mais curtas para cada vértice
+    # Inicialmente, todas as distâncias são definidas como infinito (sys.maxsize)
     shortest_distances = [sys.maxsize] * n_vertices
+    # Marcador para indicar se o vértice foi "adicionado"
+    # Isto é, se a distância mais curta para este vértice já foi encontrada
     added = [False] * n_vertices
 
+    # A distância do vértice inicial para si mesmo é sempre 0
     shortest_distances[start_vertex] = 0
 
+    # Lista de pais (precedentes) para cada vértice
+    # Para reconstruir o caminho mais curto de cada vértice ao vértice inicial
     parents = [NO_PARENT] * n_vertices
 
-    # nearest_vertex e shortest_distance são inicializados para representar o vértice mais próximo que ainda não foi visitado
-    # e a distância mais curta para vértice
+    # Loop para encontrar a distância mais curta para cada vértice
     for _ in range(1, n_vertices):
+        # Inicialização do vértice mais próximo e da distância mais curta
         nearest_vertex = -1
         shortest_distance = sys.maxsize
+        # Loop para encontrar o vértice não adicionado mais próximo
         for vertex_index in range(n_vertices):
             if not added[vertex_index] and shortest_distances[vertex_index] < shortest_distance:
                 nearest_vertex = vertex_index
                 shortest_distance = shortest_distances[vertex_index]
 
+        # Marca o vértice mais próximo como "adicionado"
         added[nearest_vertex] = True
 
+        # Loop para atualizar as distâncias dos vértices adjacentes ao vértice mais próximo
         for vertex_index in range(n_vertices):
             edge_distance = adjacency_matrix[nearest_vertex][vertex_index]
 
@@ -35,6 +45,7 @@ def dijkstra(adjacency_matrix: List[List[int]], start_vertex: int):
                 parents[vertex_index] = nearest_vertex
                 shortest_distances[vertex_index] = shortest_distance + edge_distance
 
+    # Imprime a solução e desenha o gráfico
     print_solution(start_vertex, shortest_distances, parents)
     draw_graph(parents, start_vertex)
 
